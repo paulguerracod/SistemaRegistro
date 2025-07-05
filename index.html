@@ -15,3 +15,93 @@
             <div class="tab active" data-tab="login">Iniciar Sesión</div>
             <div class="tab" data-tab="register">Registrarse</div>
         </div>
+         <div class="form-container">
+            <div id="loginForm" class="active">
+                <div class="header">
+                    <h2>Bienvenido de nuevo</h2>
+                    <p>Ingresa tus credenciales para acceder</p>
+                </div>
+                
+                <div id="loginMessage" class="message"></div>
+                
+                <div class="form-group">
+                    <label for="loginEmail">Correo Electrónico</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="tu@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Contraseña</label>
+                    <div class="password-container">
+                        <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+                        <button type="button" class="toggle-password" data-target="loginPassword">Mostrar</button>
+                    </div>
+                </div>
+                
+                <button id="loginBtn" class="btn">Iniciar Sesión</button>
+                
+                <div class="form-footer">
+                    <p>¿Olvidaste tu contraseña? <a href="#" id="forgotPassword">Recuperar</a></p>
+                </div>
+            </div>
+            
+            <div id="registerForm">
+                <div class="header">
+                    <h2>Crea tu cuenta</h2>
+                    <p>Regístrate para comenzar a usar nuestro servicio</p>
+                </div>
+                <div id="registerMessage" class="message"></div>
+                
+                <div class="form-group">
+                    <label for="registerName">Nombre Completo</label>
+                    <input type="text" id="registerName" class="form-control" placeholder="Tu nombre" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerEmail">Correo Electrónico</label>
+                    <input type="email" id="registerEmail" class="form-control" placeholder="tu@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPassword">Contraseña</label>
+                    <div class="password-container">
+                        <input type="password" id="registerPassword" class="form-control" placeholder="••••••••" required>
+                        <button type="button" class="toggle-password" data-target="registerPassword">Mostrar</button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-meter" id="passwordStrength"></div>
+                    </div>
+                    <div class="password-strength-text" id="passwordStrengthText">Seguridad de la contraseña</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Confirmar Contraseña</label>
+                    <div class="password-container">
+                        <input type="password" id="registerConfirmPassword" class="form-control" placeholder="••••••••" required>
+                        <button type="button" class="toggle-password" data-target="registerConfirmPassword">Mostrar</button>
+                    </div>
+                </div>
+                
+                <button id="registerBtn" class="btn">Registrarse</button>
+                
+                <div class="form-footer">
+                    <p>¿Ya tienes una cuenta? <a href="#" id="goToLogin">Inicia sesión</a></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="protected-content" id="protectedContent">
+            <h2>¡Bienvenido a tu área segura!</h2>
+            
+            <div class="user-info">
+                <p>Has iniciado sesión correctamente como:</p>
+                <p class="email" id="userEmail"></p>
+                <p id="userName"></p>
+            </div>
+            
+            <div class="message success">
+                Esta es una página protegida que solo puedes ver después de autenticarte.
+            </div>
+            
+            <button id="logoutBtn" class="btn btn-secondary">Cerrar Sesión</button>
+        </div>
+    </div>
