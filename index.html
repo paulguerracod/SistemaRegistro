@@ -191,3 +191,198 @@
             
             passwordStrengthText.textContent = text;
         });
+
+        // Navegación entre formularios
+        goToLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            tabs[0].click();
+        });
+        
+        forgotPassword.addEventListener('click', (e) => {
+            e.preventDefault();
+            showMessage(loginMessage, 'error', 'Por favor, contacta al soporte técnico para restablecer tu contraseña.');
+        });
+        
+        // Funcionalidad de registro
+        registerBtn.addEventListener('click', () => {
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            // Validaciones
+            if (!name || !email || !password || !confirmPassword) {
+                showMessage(registerMessage, 'error', 'Todos los campos son obligatorios.');
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showMessage(registerMessage, 'error', 'Por favor, ingresa un correo electrónico válido.');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showMessage(registerMessage, 'error', 'Las contraseñas no coinciden.');
+                return;
+            }
+            
+            if (password.length < 8) {
+                showMessage(registerMessage, 'error', 'La contraseña debe tener al menos 8 caracteres.');
+                return;
+            }
+            
+            // Registrar usuario
+            registerUser(name, email, password);
+        });
+        
+        // Funcionalidad de inicio de sesión
+        loginBtn.addEventListener('click', () => {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showMessage(loginMessage, 'error', 'Por favor, completa todos los campos.');
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showMessage(loginMessage, 'error', 'Por favor, ingresa un correo electrónico válido.');
+                return;
+            }
+            
+            // Autenticar usuario
+            authenticateUser(email, password);
+        });
+        
+        // Cerrar sesión
+        logoutBtn.addEventListener('click', () => {
+            logoutUser();
+        });
+        
+        // Funciones auxiliares
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function showMessage(element, type, message) {
+            element.textContent = message;
+            element.className = `message ${type}`;
+            element.style.display = 'block';
+            
+            // Ocultar mensaje después de 5 segundos
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+        
+        function getUsers() {
+            const usersJSON = localStorage.getItem(USERS_KEY);
+            return usersJSON ? JSON.parse(usersJSON) : [];
+        }
+        
+        function saveUsers(users) {
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
+        
+        function registerUser(name, email, password) {
+            const users = getUsers();
+            
+            // Verificar si el usuario ya existe
+            if (users.some(user => user.email === email)) {
+                showMessage(registerMessage, 'error', 'Este correo electrónico ya está registrado.');
+                return;
+            }
+            
+            // Crear nuevo usuario (en un caso real, la contraseña debería estar hasheada)
+            const newUser = {
+                id: Date.now().toString(),
+                name,
+                email,
+                password, // ¡NO hacer esto en producción! Solo para demostración
+                createdAt: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            saveUsers(users);
+            
+            showMessage(registerMessage, 'success', '¡Registro exitoso! Ahora puedes iniciar sesión.');
+            
+            // Limpiar formulario después de registro exitoso
+            document.getElementById('registerForm').reset();
+            passwordStrength.style.width = '0';
+            passwordStrengthText.textContent = 'Seguridad de la contraseña';
+            
+            // Cambiar a pestaña de login
+            setTimeout(() => {
+                tabs[0].click();
+            }, 2000);
+        }
+        
+        function authenticateUser(email, password) {
+            const users = getUsers();
+            const user = users.find(u => u.email === email);
+            
+            if (!user) {
+                showMessage(loginMessage, 'error', 'Credenciales incorrectas.');
+                return;
+            }
+            
+            if (user.password !== password) {
+                showMessage(loginMessage, 'error', 'Credenciales incorrectas.');
+                return;
+            }
+            
+            // Guardar usuario actual
+            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+            
+            // Mostrar contenido protegido
+            showProtectedContent(user);
+        }
+        
+        function showProtectedContent(user) {
+            // Ocultar formularios
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'none';
+            document.querySelector('.tabs').style.display = 'none';
+            
+            // Mostrar contenido protegido
+            protectedContent.style.display = 'block';
+            userEmail.textContent = user.email;
+            userName.textContent = user.name;
+        }
+        
+        function logoutUser() {
+            // Eliminar usuario actual
+            localStorage.removeItem(CURRENT_USER_KEY);
+            
+            // Mostrar formularios
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'block';
+            document.querySelector('.tabs').style.display = 'flex';
+            
+            // Ocultar contenido protegido
+            protectedContent.style.display = 'none';
+            
+            // Limpiar formulario de login
+            document.getElementById('loginForm').reset();
+            
+            // Cambiar a pestaña de login
+            tabs[0].click();
+        }
+        
+        // Comprobar si el usuario ya está autenticado al cargar la página
+        function checkAuthOnLoad() {
+            const currentUserJSON = localStorage.getItem(CURRENT_USER_KEY);
+            
+            if (currentUserJSON) {
+                const user = JSON.parse(currentUserJSON);
+                showProtectedContent(user);
+            }
+        }
+        
+        // Inicializar
+        checkAuthOnLoad();
+    </script>
+</body>
+</html>
