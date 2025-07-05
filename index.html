@@ -105,3 +105,40 @@
             <button id="logoutBtn" class="btn btn-secondary">Cerrar Sesión</button>
         </div>
     </div>
+    <script>
+        // Almacenamiento de usuarios usando localStorage
+        const USERS_KEY = 'authSystemUsers';
+        const CURRENT_USER_KEY = 'authSystemCurrentUser';
+        
+        // Elementos DOM
+        const tabs = document.querySelectorAll('.tab');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const goToLogin = document.getElementById('goToLogin');
+        const forgotPassword = document.getElementById('forgotPassword');
+        const loginMessage = document.getElementById('loginMessage');
+        const registerMessage = document.getElementById('registerMessage');
+        const protectedContent = document.getElementById('protectedContent');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userEmail = document.getElementById('userEmail');
+        const userName = document.getElementById('userName');
+        const passwordStrength = document.getElementById('passwordStrength');
+        const passwordStrengthText = document.getElementById('passwordStrengthText');
+        
+        // Cambiar entre pestañas de login y registro
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                if (tab.dataset.tab === 'login') {
+                    registerForm.classList.remove('active');
+                    loginForm.classList.add('active');
+                } else {
+                    loginForm.classList.remove('active');
+                    registerForm.classList.add('active');
+                }
+            });
+        });
