@@ -142,3 +142,52 @@
                 }
             });
         });
+
+        // Alternar visibilidad de contraseña
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    button.textContent = 'Ocultar';
+                } else {
+                    input.type = 'password';
+                    button.textContent = 'Mostrar';
+                }
+            });
+        });
+        
+        // Validar fortaleza de contraseña
+        document.getElementById('registerPassword').addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            let text = '';
+            
+            if (password.length >= 8) strength += 1;
+            if (/[A-Z]/.test(password)) strength += 1;
+            if (/[0-9]/.test(password)) strength += 1;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+            
+            // Actualizar barra de fortaleza
+            passwordStrength.className = 'strength-meter';
+            if (password.length === 0) {
+                passwordStrength.style.width = '0';
+                passwordStrengthText.textContent = 'Seguridad de la contraseña';
+                return;
+            }
+            
+            if (strength < 2) {
+                passwordStrength.classList.add('weak');
+                text = 'Débil';
+            } else if (strength < 4) {
+                passwordStrength.classList.add('medium');
+                text = 'Media';
+            } else {
+                passwordStrength.classList.add('strong');
+                text = 'Fuerte';
+            }
+            
+            passwordStrengthText.textContent = text;
+        });
